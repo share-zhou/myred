@@ -1,0 +1,15 @@
+#!/bin/bash
+cd /root/AQM/myred/modules
+make clean
+make
+cd /root/AQM/myred/queuedata
+make clean
+make
+insmod /root/AQM/myred/modules/sch_myred.ko
+insmod /root/AQM/myred/queuedata/seqfile_queuedata_myred.ko
+/root/AQM/myred/iproute2-3.1.0/tc/tc qdisc add dev eth0 root myred limit 10000kB sampl_period 10 p_init 0 p_min 0 p_max 0.001 q_min 200 q_max 300 ecn
+#iperf -c 192.168.5.101 -b 10M -P 10 -t 100
+#client  ip:192.168.5.101   parallel:10  time:100 secs
+iperf -c 192.168.5.106 -P 50 -t 50
+
+
